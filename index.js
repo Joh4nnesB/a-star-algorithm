@@ -3,6 +3,8 @@ const BLOCK_GAP = 3; // px
 const BLOCK_OUTLINE = BLOCK_SIZE + BLOCK_GAP;
 
 class Block {
+  hovered = false;
+
   constructor(x, y) {
     this.x = x;
     this.y = y;
@@ -19,6 +21,7 @@ class World {
     this.fillWorld();
     this.setupCanvas();
     this.render();
+    this.addHoverListener();
   }
 
   /**
@@ -50,19 +53,29 @@ class World {
    * Renders all the blocks to the canvas
    */
   render() {
-    // draw a black background
+    // Draw a black background
     this.context.fillStyle = "black";
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    //draw a square for each block
+    // Draw a square for each block
     this.blocks.flat().forEach(block => {
       this.context.fillStyle = "white";
-      this.context.fillRect(
-        BLOCK_OUTLINE * block.x + BLOCK_GAP,
-        BLOCK_OUTLINE * block.y + BLOCK_GAP,
-        BLOCK_SIZE,
-        BLOCK_SIZE
-      );
+      // If the block is hovered, the square will be bigger than normal
+      if (block.hovered) {
+        this.context.fillRect(
+          BLOCK_OUTLINE * block.x + BLOCK_GAP / 2,
+          BLOCK_OUTLINE * block.y + BLOCK_GAP / 2,
+          BLOCK_OUTLINE,
+          BLOCK_OUTLINE
+        );
+      } else {
+        this.context.fillRect(
+          BLOCK_OUTLINE * block.x + BLOCK_GAP,
+          BLOCK_OUTLINE * block.y + BLOCK_GAP,
+          BLOCK_SIZE,
+          BLOCK_SIZE
+        );
+      }
     });
   }
 
@@ -83,6 +96,29 @@ class World {
       return undefined; // no block was found
     }
     return this.blocks[y][x];
+  }
+
+  /**
+   * Checks if a block is hovered and re-renders the world each time the mouse was moved
+   */
+  addHoverListener() {
+    let lastBlock;
+
+    this.canvas.onmousemove = event => {
+      const canvasBoundingRect = this.canvas.getBoundingClientRect();
+      const currentBlock = this.raycastBlock(
+        event.clientX - canvasBoundingRect.x,
+        event.clientY - canvasBoundingRect.y
+      );
+
+      if (lastBlock) lastBlock.hovered = false;
+      if (currentBlock) {
+        currentBlock.hovered = true;
+        lastBlock = currentBlock;
+      }
+
+      if (currentBlock) this.render();
+    };
   }
 }
 
