@@ -104,20 +104,21 @@ class World {
   addHoverListener() {
     let lastBlock;
 
-    this.canvas.onmousemove = event => {
+    window.onmousemove = event => {
       const canvasBoundingRect = this.canvas.getBoundingClientRect();
       const currentBlock = this.raycastBlock(
         event.clientX - canvasBoundingRect.x,
         event.clientY - canvasBoundingRect.y
       );
 
+      console.log(lastBlock, currentBlock);
       if (lastBlock) lastBlock.hovered = false;
       if (currentBlock) {
         currentBlock.hovered = true;
         lastBlock = currentBlock;
       }
 
-      if (currentBlock) this.render();
+      this.render();
     };
   }
 }
