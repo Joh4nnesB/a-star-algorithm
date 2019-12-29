@@ -111,7 +111,6 @@ class World {
         event.clientY - canvasBoundingRect.y
       );
 
-      console.log(lastBlock, currentBlock);
       if (lastBlock) lastBlock.hovered = false;
       if (currentBlock) {
         currentBlock.hovered = true;
