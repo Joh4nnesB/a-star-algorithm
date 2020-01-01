@@ -100,9 +100,12 @@ class World {
    */
   currentMouseButton = 0;
 
-  placeWalls = true;
+  placeWalls = false;
   placeSpawn = false;
   placeTarget = false;
+
+  statusMessageSpan = document.getElementById("status_msg");
+  statusNextButton = document.getElementById("status_next");
 
   constructor(sizeX, sizeY) {
     this.sizeX = sizeX;
@@ -113,10 +116,12 @@ class World {
     this.render();
     this.addMouseMoveListener();
     this.addMouseClickListener();
+
+    this.setWalls();
   }
 
   /**
-   * Creates a new canvas element, gives it the correct size and appends it to the body
+   * Creates a new canvas element, gives it the correct size and appends it to the dom
    */
   setupCanvas() {
     this.canvas = document.createElement("canvas");
@@ -124,7 +129,7 @@ class World {
     this.canvas.width = BLOCK_OUTLINE * this.sizeX + BLOCK_GAP;
     this.canvas.height = BLOCK_OUTLINE * this.sizeY + BLOCK_GAP;
 
-    document.body.appendChild(this.canvas);
+    document.getElementById("canvas_wrapper").appendChild(this.canvas);
     this.context = this.canvas.getContext("2d");
   }
 
@@ -231,23 +236,36 @@ class World {
     return this.blocks[y][x];
   }
 
+  setWalls() {
+    this.placeWalls = true;
+    this.placeSpawn = false;
+    this.placeTarget = false;
+
+    this.updateStatus("Place walls", _ => this.setSpawn());
+  }
+
   setSpawn() {
     this.placeWalls = false;
     this.placeSpawn = true;
-    this.placeTarget = true;
+    this.placeTarget = false;
+
+    this.updateStatus("Set spawn");
   }
 
   setTarget() {
     this.placeWalls = false;
     this.placeSpawn = false;
     this.placeTarget = true;
+    this.updateStatus("Set target");
   }
 
   worldSetupCompleted() {
     this.placeWalls = false;
     this.placeSpawn = false;
     this.placeTarget = false;
+    this.updateStatus("Finding the best path...");
     this.path = this.findBestPath();
+    this.updateStatus("Completed!");
   }
 
   /**
@@ -372,6 +390,25 @@ class World {
     // If the loop was completed, no path could be found :(
     alert("No path could be found :(");
   }
+
+  /**
+   * Updates the status elements
+   * @param {String} message
+   * @param {Function} next a callback function when the next button was pressed. If next is undefined, the next button will be disabled
+   */
+  updateStatus(message, next) {
+    this.statusMessageSpan.innerText = message;
+
+    this.statusNextButton.onclick = next;
+    if (next) {
+      this.statusNextButton.disabled = false;
+    } else {
+      this.statusNextButton.disabled = true;
+    }
+  }
 }
 
-const world = new World(30, 30);
+const minimalWindowSize =
+  Math.min(window.innerWidth, window.innerHeight) - BLOCK_SIZE * 4;
+const worldSize = Math.floor((minimalWindowSize - BLOCK_GAP) / BLOCK_OUTLINE);
+const world = new World(worldSize, worldSize);
