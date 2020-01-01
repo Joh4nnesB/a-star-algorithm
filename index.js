@@ -409,6 +409,6 @@ class World {
 }
 
 const minimalWindowSize =
-  Math.min(window.innerWidth, window.innerHeight) - BLOCK_SIZE * 4;
+  Math.min(window.innerWidth, window.innerHeight) - BLOCK_SIZE * 5;
 const worldSize = Math.floor((minimalWindowSize - BLOCK_GAP) / BLOCK_OUTLINE);
 const world = new World(worldSize, worldSize);
