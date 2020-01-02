@@ -9,7 +9,7 @@ Try out the life demo on: [a-star.netlify.com](https://a-star.netlify.com/)
 ## Screenshots
 
 ![Screenshot 1](https://i.imgur.com/aQC4Pi9.png)
-![Screenshot 1](https://i.imgur.com/aQC4Pi9.png)
+![Screenshot 2](https://i.imgur.com/ZVwL3el.png)
 
 ## Resources
 
