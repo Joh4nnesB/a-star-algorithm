@@ -4,7 +4,7 @@
 
 This is an implementation of the A\* path finding algorithm in JavaScript.
 
-Try out the life demo on: [a-star.netlify.com](https://a-star.netlify.com/)
+Try out the life demo on: [a-star.netlify.app](https://a-star.netlify.app/)
 
 ## Screenshots
 
